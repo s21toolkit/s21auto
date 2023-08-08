@@ -1,0 +1,30 @@
+{
+	"name": "s21auto",
+	"type": "module",
+	"module": "src/index.ts",
+	"bin": "bin/main.ts",
+	"scripts": {
+		"start": "bun src/index.ts",
+		"lint": "eslint \"src/**/*.{js,mjs,cjs,ts,mts}\"",
+		"lint:fix": "eslint \"src/**/*.{js,mjs,cjs,ts,mts}\" --fix"
+	},
+	"dependencies": {
+		"arktype": "^1.0.18-alpha",
+		"cmd-ts": "^0.13.0",
+		"common-tags": "^1.8.2",
+		"quicktype-core": "^23.0.63"
+	},
+	"devDependencies": {
+		"@types/eslint": "^8.44.1",
+		"@types/har-format": "^1.2.11",
+		"bun-types": "latest",
+		"eslint": "^8.46.0",
+		"eslint-kit": "^10.4.0",
+		"eslint-plugin-no-relative-import-paths": "^1.5.2",
+		"prettier": "^3.0.0",
+		"typescript": "^5.0.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
+}
