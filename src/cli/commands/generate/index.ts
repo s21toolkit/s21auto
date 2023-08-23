@@ -36,7 +36,7 @@ export const generateCommand = command({
 			)
 
 			const responseDataSamples = entries.map(
-				(entry) => JSON.parse(entry.response.content.text!) as GqlResponse,
+				(entry) => JSON.parse(entry.response.content.encoding === "base64" ? atob(entry.response.content.text!) : entry.response.content.text!) as GqlResponse,
 			)
 
 			const query = requestDataSamples[0].query
@@ -72,7 +72,7 @@ export const generateCommand = command({
 })
 
 function getApiOperations(har: Har) {
-	const apiEntries = har.log.entries.filter(isGqlApiRequest)
+	const apiEntries = har.log.entries.filter(isGqlApiRequest).filter(e => e.response.status == 200)
 
 	const operations = new Map<string, [Entry, ...Entry[]]>()
 
