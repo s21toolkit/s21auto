@@ -72,6 +72,7 @@ async function generateTypes(jsonSamples: string[], name: string) {
 		rendererOptions: {
 			"just-types": true,
 		},
+		inferEnums: false
 	})
 
 	return render.lines.join("\n")
