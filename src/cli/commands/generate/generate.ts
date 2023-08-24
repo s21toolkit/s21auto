@@ -6,6 +6,8 @@ import {
 	quicktype,
 } from "quicktype-core"
 
+type Wrapper = (types: string) => string
+
 export async function generate(
 	operationName: string,
 	query: string,
@@ -17,36 +19,34 @@ export async function generate(
 
 	const operation = capitalizeFirstLetter(operationName)
 
+	const commonWrappers = [wrapOperationType(operation)]
+	const requestWrappers = [...commonWrappers, wrapRequestType]
+	const responseWrappers = [...commonWrappers, wrapResponseType]
+
 	let typeSources = source`
 		package requests
 
 		import "s21client/gql"
 
-		${variablesTypes}
+		${renameTypes(variablesTypes, requestWrappers)}
 
-		${dataTypes}
+		${renameTypes(dataTypes, responseWrappers)}
 
 	`
 
-	const types = getTypeNames(typeSources)
-
-	for (const type of types) {
-		typeSources = typeSources.replaceAll(
-			new RegExp(String.raw`\b${type}\b`, "g"),
-			`${type}_${operation}`,
-		)
-	}
+	const variablesType = applyWrappers("Variables", requestWrappers)
+	const dataType = applyWrappers("Data", responseWrappers)
 
 	const result = source`
 		${typeSources}
 
-		func (ctx *RequestContext) ${operation}(variables Variables_${operation}) (Data_${operation}, error) {
-			request := gql.NewQueryRequest[Variables_${operation}](
+		func (ctx *RequestContext) ${operation}(variables ${variablesType}) (${dataType}, error) {
+			request := gql.NewQueryRequest[${variablesType}](
 				"${query}",
 				variables,
 			)
 
-			return GqlRequest[Data_${operation}](ctx, request)
+			return GqlRequest[${dataType}](ctx, request)
 		}
 	`
 
@@ -84,4 +84,36 @@ function getTypeNames(source: string) {
 	const types = source.matchAll(TYPEDEF_PATTERN)
 
 	return Array.from(types).map((match) => match[0])
+}
+
+function wrapRequestType(type: string) {
+	return `Request_${type}`
+}
+
+function wrapResponseType(type: string) {
+	return `Response_${type}`
+}
+
+function wrapOperationType(operation: string) {
+	return function (type: string) {
+		return `${type}_${operation}`
+	}
+}
+
+function applyWrappers(type: string, wrappers: Wrapper[]) {
+	return wrappers.reduce((p, w) => w(p), type)
+}
+
+function renameTypes(source: string, wrappers: Wrapper[]) {
+	const types = getTypeNames(source)
+	let sources = source
+
+	for (const type of types) {
+		sources = sources.replaceAll(
+			new RegExp(String.raw`\b${type}\b`, "g"),
+			applyWrappers(type, wrappers),
+		)
+	}
+
+	return sources
 }
