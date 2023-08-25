@@ -26,7 +26,7 @@ export async function generate(
 	let typeSources = source`
 		package requests
 
-		import "s21client/gql"
+		import "github.com/s21toolkit/s21client/gql"
 
 		${renameTypes(variablesTypes, requestWrappers)}
 
@@ -42,7 +42,7 @@ export async function generate(
 
 		func (ctx *RequestContext) ${operation}(variables ${variablesType}) (${dataType}, error) {
 			request := gql.NewQueryRequest[${variablesType}](
-				"${query}",
+				"${query.replaceAll("\n", "\\n")}",
 				variables,
 			)
 
