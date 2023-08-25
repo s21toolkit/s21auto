@@ -42,7 +42,7 @@ export async function generate(
 
 		func (ctx *RequestContext) ${operation}(variables ${variablesType}) (${dataType}, error) {
 			request := gql.NewQueryRequest[${variablesType}](
-				"${query}",
+				"${query.replaceAll("\n", "\\n")}",
 				variables,
 			)
 
