@@ -12,4 +12,10 @@ export namespace pipe {
 	export function of<T>(val: T) {
 		return pipe((_: void) => val)
 	}
+
+	export function from<T>() {
+		return pipe((_: T) => _)
+	}
+
+	export const then = pipe
 }
