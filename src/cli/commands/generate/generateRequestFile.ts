@@ -23,8 +23,8 @@ export async function generateRequestFile(config: RequestFileConfig) {
 	const requestTypeMapper = operationTypeMapper.then(getRequestType).done()
 	const responseTypeMapper = operationTypeMapper.then(getResponseType).done()
 
-	const variableType = requestTypeMapper("Variables")
-	const dataType = responseTypeMapper("Data")
+	const variableType = operationTypeMapper.call("Variables")
+	const dataType = operationTypeMapper.call("Data")
 
 	const result = source`
 		package requests
@@ -53,11 +53,19 @@ function getMethodName(string: string) {
 }
 
 function getRequestType(type: string) {
-	return `Request_${type}`
+	if (type.startsWith("Variables_")) {
+		return type
+	}
+
+	return `Variables_${type}`
 }
 
 function getResponseType(type: string) {
-	return `Response_${type}`
+	if (type.startsWith("Data_")) {
+		return type
+	}
+
+	return `Data_${type}`
 }
 
 function getMethodType(method: string) {
