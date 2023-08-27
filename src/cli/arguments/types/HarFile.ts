@@ -1,4 +1,4 @@
-import { extendType, positional, restPositionals } from "cmd-ts"
+import { extendType } from "cmd-ts"
 import { File } from "cmd-ts/batteries/fs"
 import { Har } from "har-format"
 import { readFile } from "node:fs/promises"
@@ -21,17 +21,3 @@ export const HarFile = extendType(File, {
 		return har
 	},
 })
-
-// One or more positional har file arguments as two arguments
-export const harFiles = {
-	harFirst: positional({
-		description: "HAR file to analyze",
-		displayName: "har file",
-		type: HarFile,
-	}),
-	harRest: restPositionals({
-		description: "Additional HAR files to analyze",
-		displayName: "har files",
-		type: HarFile,
-	}),
-}
