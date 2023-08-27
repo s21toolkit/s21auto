@@ -1,13 +1,14 @@
 import { writeFile } from "fs/promises"
 import { command, flag, number, option, optional, string } from "cmd-ts"
 import { harFiles } from "@/cli/arguments/harFiles"
-import { outFile } from "@/cli/arguments/outFile"
+import { NewFile } from "@/cli/arguments/types/NewFile"
 import { clean } from "@/har/clean"
 import { filter, isGqlRequest } from "@/har/filter"
 import { merge } from "@/har/merge"
 
 export const transformCommand = command({
 	name: "transform",
+	aliases: ["merge"],
 	description: "Transform HAR file(s)",
 	args: {
 		filterGql: flag({
@@ -32,7 +33,13 @@ export const transformCommand = command({
 			long: "clean",
 			description: "Remove all unnecessary log data",
 		}),
-		...outFile,
+		outFile: option({
+			short: "o",
+			long: "out-file",
+			description: "Output HAR file",
+			defaultValue: () => "log.har",
+			type: NewFile,
+		}),
 		...harFiles,
 	},
 	async handler(argv) {
