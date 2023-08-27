@@ -12,6 +12,7 @@
     "arktype": "^1.0.18-alpha",
     "cmd-ts": "^0.13.0",
     "common-tags": "^1.8.2",
+    "immer": "^10.0.2",
     "quicktype-core": "^23.0.63"
   },
   "devDependencies": {
@@ -24,9 +25,9 @@
     "eslint-kit": "^10.4.0",
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
     "prettier": "^3.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.2.2"
   }
 }
