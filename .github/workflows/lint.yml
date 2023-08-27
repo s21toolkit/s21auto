@@ -1,0 +1,25 @@
+on:
+  pull_request:
+    types: ["opened", "ready_for_review", "review_requested"]
+    branches: ["feature/ci/linter"]
+  push:
+    branches: ["feature/ci/linter"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          cache: npm
+          node-version: 20.x
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 0.8.1
+      - name: Install
+        run: bun install
+      - name: Lint
+        run: bun run lint
