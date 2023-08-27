@@ -9,7 +9,5 @@ export function compose<A, B>(fn: (a: A) => B) {
 }
 
 export namespace compose {
-	export function of<T>(val: T) {
-		return compose((_: void) => val)
-	}
+	export const then = compose
 }
