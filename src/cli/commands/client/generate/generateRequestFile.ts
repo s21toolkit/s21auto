@@ -1,6 +1,6 @@
 import { source } from "common-tags"
-import { generateTypes } from "@/cli/commands/generate/generateTypes"
-import { mapTypes } from "@/cli/commands/generate/mapTypes"
+import { generateTypes } from "@/cli/commands/client/generate/generateTypes"
+import { mapTypes } from "@/cli/commands/client/generate/mapTypes"
 import { pipe } from "@/utils/pipe"
 
 export type RequestFileConfig = {

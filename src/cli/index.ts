@@ -1,14 +1,14 @@
 import { subcommands } from "cmd-ts"
-import { exportCommand } from "@/cli/commands/export"
-import { generateCommand } from "@/cli/commands/generate"
-import { transformCommand } from "@/cli/commands/transform"
+import { adapterCommand } from "@/cli/commands/adapter"
+import { clientCommand } from "@/cli/commands/client"
+import { harCommand } from "@/cli/commands/har"
 
 export const cli = subcommands({
 	name: "s21auto",
-	description: "Multipurpose traffic analyzer for edu.21-school.ru",
+	description: "Multipurpose CLI for s21toolkit",
 	cmds: {
-		export: exportCommand,
-		generate: generateCommand,
-		transform: transformCommand,
+		har: harCommand,
+		client: clientCommand,
+		adapter: adapterCommand,
 	},
 })

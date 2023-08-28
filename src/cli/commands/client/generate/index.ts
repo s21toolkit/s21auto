@@ -3,9 +3,9 @@ import { resolve } from "path"
 import { command } from "cmd-ts"
 import { harFiles } from "@/cli/arguments/harFiles"
 import { outDir } from "@/cli/arguments/outDir"
-import { generateRequestFile } from "@/cli/commands/generate/generateRequestFile"
-import { getApiOperations } from "@/cli/commands/generate/getApiOperatons"
-import { getDataSamples } from "@/cli/commands/generate/getDataSamples"
+import { generateRequestFile } from "@/cli/commands/client/generate/generateRequestFile"
+import { getApiOperations } from "@/cli/commands/client/generate/getApiOperatons"
+import { getDataSamples } from "@/cli/commands/client/generate/getDataSamples"
 import { merge } from "@/har/merge"
 
 export const generateCommand = command({

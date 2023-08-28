@@ -8,7 +8,7 @@ import {
 	createEnvironment,
 	createRequest,
 	createWorkspace,
-} from "@/cli/commands/export/templates"
+} from "@/cli/commands/har/export/templates"
 import { GqlRequest } from "@/gql/GqlRequest"
 import { filter, isGqlRequest, isHttpOk } from "@/har/filter"
 import { merge } from "@/har/merge"
