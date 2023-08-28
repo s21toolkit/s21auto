@@ -22,6 +22,7 @@ export function generateMethodFile(method: string) {
 		func init() {
 			registerMethod(func(g echoswagger.ApiGroup, c *AdapterController) {
 				g.POST("/${method}", c.Handle_${method}).
+					SetOperationId("${method}").
 					AddParamBody(requests.${variableType}{}, "variables", "Request variables", true).
 					AddResponse(http.StatusOK, "Success", requests.${dataType}{}, nil)
 			})
