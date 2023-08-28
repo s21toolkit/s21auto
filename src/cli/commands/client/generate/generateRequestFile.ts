@@ -2,7 +2,7 @@ import { source } from "common-tags"
 import { generateTypes } from "@/cli/commands/client/generate/generateTypes"
 import { mapTypes } from "@/cli/commands/client/generate/mapTypes"
 import { getMethodName } from "@/codegen/getMethodName"
-import { getMethodTypeName } from "@/codegen/getMethodTypeName"
+import { getMethodTypeNameMapper } from "@/codegen/getMethodTypeNameMapper"
 import { getRequestTypeName } from "@/codegen/getRequestTypeName"
 import { getResponseTypeName } from "@/codegen/getResponseTypeName"
 import { pipe } from "@/utils/pipe"
@@ -22,10 +22,12 @@ export async function generateRequestFile(config: RequestFileConfig) {
 
 	const method = getMethodName(operation)
 
+	const getMethodTypeName = getMethodTypeNameMapper(method)
+
 	// prettier-ignore
 	const operationTypeMapper = pipe
 		.from<string>()
-		.then(getMethodTypeName(method))
+		.then(getMethodTypeName)
 
 	// prettier-ignore
 	const requestTypeMapper = operationTypeMapper

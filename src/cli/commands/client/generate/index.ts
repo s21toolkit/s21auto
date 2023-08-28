@@ -1,11 +1,12 @@
 import { writeFile } from "fs/promises"
-import { resolve } from "path"
 import { command } from "cmd-ts"
+import { resolve } from "node:path"
 import { harFiles } from "@/cli/arguments/harFiles"
 import { outDir } from "@/cli/arguments/outDir"
 import { generateRequestFile } from "@/cli/commands/client/generate/generateRequestFile"
-import { getApiOperations } from "@/cli/commands/client/generate/getApiOperatons"
 import { getDataSamples } from "@/cli/commands/client/generate/getDataSamples"
+import { getMethodFileName } from "@/codegen/getMethodFileName"
+import { getApiOperations } from "@/har/getApiOperatons"
 import { merge } from "@/har/merge"
 
 export const generateCommand = command({
@@ -44,7 +45,7 @@ export const generateCommand = command({
 				variableSamples,
 			})
 
-			const filename = getFileName(operation)
+			const filename = getMethodFileName(operation)
 
 			const path = resolve(argv.outDir, filename)
 
@@ -56,9 +57,3 @@ export const generateCommand = command({
 		await Promise.all(fsWrites)
 	},
 })
-
-function getFileName(operation: string) {
-	const base = operation.replaceAll(/(?<=[a-z])([A-Z])/g, "_$1").toLowerCase()
-
-	return `${base}.go`
-}
