@@ -1,6 +1,10 @@
 import { source } from "common-tags"
 import { generateTypes } from "@/cli/commands/client/generate/generateTypes"
 import { mapTypes } from "@/cli/commands/client/generate/mapTypes"
+import { getMethodName } from "@/codegen/getMethodName"
+import { getMethodTypeName } from "@/codegen/getMethodTypeName"
+import { getRequestTypeName } from "@/codegen/getRequestTypeName"
+import { getResponseTypeName } from "@/codegen/getResponseTypeName"
 import { pipe } from "@/utils/pipe"
 
 export type RequestFileConfig = {
@@ -18,13 +22,23 @@ export async function generateRequestFile(config: RequestFileConfig) {
 
 	const method = getMethodName(operation)
 
-	const operationTypeMapper = pipe.from<string>().then(getMethodType(method))
+	// prettier-ignore
+	const operationTypeMapper = pipe
+		.from<string>()
+		.then(getMethodTypeName(method))
 
-	const requestTypeMapper = operationTypeMapper.then(getRequestType).done()
-	const responseTypeMapper = operationTypeMapper.then(getResponseType).done()
+	// prettier-ignore
+	const requestTypeMapper = operationTypeMapper
+		.then(getRequestTypeName)
+		.done()
 
-	const variableType = operationTypeMapper.call("Variables")
-	const dataType = operationTypeMapper.call("Data")
+	// prettier-ignore
+	const responseTypeMapper = operationTypeMapper
+		.then(getResponseTypeName)
+		.done()
+
+	const variableType = getMethodTypeName("Variables")
+	const dataType = getMethodTypeName("Data")
 
 	const result = source`
 		package requests
@@ -46,30 +60,4 @@ export async function generateRequestFile(config: RequestFileConfig) {
 	`
 
 	return result
-}
-
-function getMethodName(string: string) {
-	return `${string[0].toUpperCase()}${string.slice(1)}`
-}
-
-function getRequestType(type: string) {
-	if (type.startsWith("Variables_")) {
-		return type
-	}
-
-	return `Variables_${type}`
-}
-
-function getResponseType(type: string) {
-	if (type.startsWith("Data_")) {
-		return type
-	}
-
-	return `Data_${type}`
-}
-
-function getMethodType(method: string) {
-	return function (type: string) {
-		return `${type}_${method}`
-	}
 }
