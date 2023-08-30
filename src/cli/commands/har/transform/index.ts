@@ -1,7 +1,18 @@
 import { writeFile } from "fs/promises"
-import { command, flag, number, option, optional, string } from "cmd-ts"
+import {
+	array,
+	command,
+	flag,
+	multioption,
+	number,
+	option,
+	optional,
+	string,
+} from "cmd-ts"
 import { harFiles } from "@/cli/arguments/harFiles"
 import { NewFile } from "@/cli/arguments/types/NewFile"
+import { matchGqlOperation } from "@/cli/commands/har/transform/matchGqlOperation"
+import { GqlRequest } from "@/gql/GqlRequest"
 import { clean } from "@/har/clean"
 import { filter, isGqlRequest } from "@/har/filter"
 import { merge } from "@/har/merge"
@@ -28,6 +39,11 @@ export const transformCommand = command({
 			description: "Filter by HTTP response status",
 			type: optional(number),
 		}),
+		filterOperations: multioption({
+			short: "p",
+			long: "filter:operation",
+			type: array(string),
+		}),
 		clean: flag({
 			short: "c",
 			long: "clean",
@@ -45,7 +61,7 @@ export const transformCommand = command({
 	async handler(argv) {
 		let har = merge(argv.harFirst, ...argv.harRest)
 
-		if (argv.filterGql) {
+		if (argv.filterGql || argv.filterOperations.length > 0) {
 			har = filter(har, isGqlRequest)
 		}
 
@@ -55,6 +71,10 @@ export const transformCommand = command({
 
 		if (argv.filterStatus) {
 			har = filter(har, (entry) => entry.response.status === argv.filterStatus!)
+		}
+
+		if (argv.filterOperations.length > 0) {
+			har = filter(har, matchGqlOperation(...argv.filterOperations))
 		}
 
 		if (argv.clean) {
