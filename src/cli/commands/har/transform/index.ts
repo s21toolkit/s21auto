@@ -12,7 +12,6 @@ import {
 import { harFiles } from "@/cli/arguments/harFiles"
 import { NewFile } from "@/cli/arguments/types/NewFile"
 import { matchGqlOperation } from "@/cli/commands/har/transform/matchGqlOperation"
-import { GqlRequest } from "@/gql/GqlRequest"
 import { clean } from "@/har/clean"
 import { filter, isGqlRequest } from "@/har/filter"
 import { merge } from "@/har/merge"
@@ -42,6 +41,12 @@ export const transformCommand = command({
 		filterOperations: multioption({
 			short: "p",
 			long: "filter:operation",
+			type: array(string),
+		}),
+		filterOutOperations: multioption({
+			short: "n",
+			long: "filter-out:operation",
+			description: "Inverse filter by GQL operation name(s)",
 			type: array(string),
 		}),
 		clean: flag({
@@ -75,6 +80,13 @@ export const transformCommand = command({
 
 		if (argv.filterOperations.length > 0) {
 			har = filter(har, matchGqlOperation(...argv.filterOperations))
+		}
+
+		if (argv.filterOutOperations.length > 0) {
+			har = filter(
+				har,
+				(entry) => !matchGqlOperation(...argv.filterOutOperations)(entry),
+			)
 		}
 
 		if (argv.clean) {
