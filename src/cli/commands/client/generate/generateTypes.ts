@@ -1,30 +1,16 @@
-import {
-	combineRenderResults,
-	GoTargetLanguage,
-	InputData,
-	jsonInputForTargetLanguage,
-	quicktypeMultiFileSync,
-} from "quicktype-core"
+import { GoTargetLanguage } from "quicktype-core"
+import { quicktypeJsonSamples } from "@/codegen/quicktypeJsonSamples"
 
 export function generateTypes(jsonSamples: string[], name: string) {
-	const inputData = new InputData()
-
-	const lang = new GoTargetLanguage()
-
-	inputData.addSourceSync("json", { name, samples: jsonSamples }, () =>
-		jsonInputForTargetLanguage(lang),
-	)
-
-	const renders = quicktypeMultiFileSync({
-		lang,
-		inputData,
-		rendererOptions: {
-			"just-types": true,
+	return quicktypeJsonSamples(
+		new GoTargetLanguage(),
+		{
+			rendererOptions: {
+				"just-types": true,
+			},
+			inferEnums: false,
 		},
-		inferEnums: false,
-	})
-
-	const render = combineRenderResults(renders)
-
-	return render.lines.join("\n")
+		jsonSamples,
+		name,
+	)
 }
