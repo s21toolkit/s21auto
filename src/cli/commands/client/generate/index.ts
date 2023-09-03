@@ -38,7 +38,7 @@ export const generateCommand = command({
 				JSON.stringify(sample.data),
 			)
 
-			const result = await generateRequestFile({
+			const result = generateRequestFile({
 				operation,
 				query,
 				dataSamples,

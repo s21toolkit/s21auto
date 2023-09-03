@@ -14,11 +14,11 @@ export type RequestFileConfig = {
 	dataSamples: string[]
 }
 
-export async function generateRequestFile(config: RequestFileConfig) {
+export function generateRequestFile(config: RequestFileConfig) {
 	const { operation, query, variableSamples, dataSamples } = config
 
-	const variableTypes = await generateTypes(variableSamples, "Variables")
-	const dataTypes = await generateTypes(dataSamples, "Data")
+	const variableTypes = generateTypes(variableSamples, "Variables")
+	const dataTypes = generateTypes(dataSamples, "Data")
 
 	const method = getMethodName(operation)
 

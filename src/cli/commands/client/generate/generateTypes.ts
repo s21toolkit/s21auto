@@ -1,20 +1,21 @@
 import {
+	combineRenderResults,
 	GoTargetLanguage,
 	InputData,
 	jsonInputForTargetLanguage,
-	quicktype,
+	quicktypeMultiFileSync,
 } from "quicktype-core"
 
-export async function generateTypes(jsonSamples: string[], name: string) {
+export function generateTypes(jsonSamples: string[], name: string) {
 	const inputData = new InputData()
 
 	const lang = new GoTargetLanguage()
 
-	await inputData.addSource("json", { name, samples: jsonSamples }, () =>
+	inputData.addSourceSync("json", { name, samples: jsonSamples }, () =>
 		jsonInputForTargetLanguage(lang),
 	)
 
-	const render = await quicktype({
+	const renders = quicktypeMultiFileSync({
 		lang,
 		inputData,
 		rendererOptions: {
@@ -22,6 +23,8 @@ export async function generateTypes(jsonSamples: string[], name: string) {
 		},
 		inferEnums: false,
 	})
+
+	const render = combineRenderResults(renders)
 
 	return render.lines.join("\n")
 }
