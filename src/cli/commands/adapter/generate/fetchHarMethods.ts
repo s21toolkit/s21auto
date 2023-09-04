@@ -1,7 +1,7 @@
 import { Har } from "har-format"
 import { getMethodName } from "@/codegen/getMethodName"
 import { filter, isGqlRequest, isHttpOk } from "@/har/filter"
-import { getApiOperations } from "@/har/getApiOperatons"
+import { getApiOperations } from "@/har/getApiOperations"
 import { merge } from "@/har/merge"
 import { pipe } from "@/utils/pipe"
 

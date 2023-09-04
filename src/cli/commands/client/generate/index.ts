@@ -6,7 +6,7 @@ import { outDir } from "@/cli/arguments/outDir"
 import { generateRequestFile } from "@/cli/commands/client/generate/generateRequestFile"
 import { getDataSamples } from "@/cli/commands/client/generate/getDataSamples"
 import { getMethodFileName } from "@/codegen/getMethodFileName"
-import { getApiOperations } from "@/har/getApiOperatons"
+import { getApiOperations } from "@/har/getApiOperations"
 import { merge } from "@/har/merge"
 
 export const generateCommand = command({
