@@ -23,7 +23,7 @@ export const generateCommand = command({
 
 		const fsWrites: Promise<void>[] = []
 
-		for (const [operation, entries] of operations) {
+		for (const [name, entries] of operations) {
 			const { requestSamples, responseSamples } = getDataSamples(entries)
 
 			if (requestSamples.length === 0 || responseSamples.length === 0) continue
@@ -39,13 +39,13 @@ export const generateCommand = command({
 			)
 
 			const result = generateRequestFile({
-				operation,
+				name,
 				query,
 				dataSamples,
 				variableSamples,
 			})
 
-			const filename = getMethodFileName(operation)
+			const filename = getMethodFileName(name)
 
 			const path = resolve(argv.outDir, filename)
 

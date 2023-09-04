@@ -8,8 +8,8 @@ import { getResponseTypeName } from "@/codegen/getResponseTypeName"
 import { OperationData } from "@/gql/OperationData"
 import { pipe } from "@/utils/pipe"
 
-export function generateRequestFile(config: OperationData) {
-	const { name, query, variableSamples, dataSamples } = config
+export function generateRequestFile(operation: OperationData) {
+	const { name, query, variableSamples, dataSamples } = operation
 
 	const variableTypes = generateTypes(variableSamples, "Variables")
 	const dataTypes = generateTypes(dataSamples, "Data")
