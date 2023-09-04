@@ -1,6 +1,7 @@
 import { subcommands } from "cmd-ts"
 import { adapterCommand } from "@/cli/commands/adapter"
 import { clientCommand } from "@/cli/commands/client"
+import { docsCommand } from "@/cli/commands/docs"
 import { harCommand } from "@/cli/commands/har"
 
 export const cli = subcommands({
@@ -10,5 +11,6 @@ export const cli = subcommands({
 		har: harCommand,
 		client: clientCommand,
 		adapter: adapterCommand,
+		docs: docsCommand,
 	},
 })
