@@ -5,22 +5,16 @@ import { getMethodName } from "@/codegen/getMethodName"
 import { getMethodTypeNameMapper } from "@/codegen/getMethodTypeNameMapper"
 import { getRequestTypeName } from "@/codegen/getRequestTypeName"
 import { getResponseTypeName } from "@/codegen/getResponseTypeName"
+import { OperationData } from "@/gql/OperationData"
 import { pipe } from "@/utils/pipe"
 
-export type RequestFileConfig = {
-	operation: string
-	query: string
-	variableSamples: string[]
-	dataSamples: string[]
-}
-
-export function generateRequestFile(config: RequestFileConfig) {
-	const { operation, query, variableSamples, dataSamples } = config
+export function generateRequestFile(config: OperationData) {
+	const { name, query, variableSamples, dataSamples } = config
 
 	const variableTypes = generateTypes(variableSamples, "Variables")
 	const dataTypes = generateTypes(dataSamples, "Data")
 
-	const method = getMethodName(operation)
+	const method = getMethodName(name)
 
 	const getMethodTypeName = getMethodTypeNameMapper(method)
 
