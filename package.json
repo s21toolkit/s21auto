@@ -9,7 +9,6 @@
     "lint:fix": "eslint \"src/**/*.{js,mjs,cjs,ts,mts}\" --fix"
   },
   "dependencies": {
-    "arktype": "^1.0.18-alpha",
     "cmd-ts": "^0.13.0",
     "common-tags": "^1.8.2",
     "immer": "^10.0.2",
