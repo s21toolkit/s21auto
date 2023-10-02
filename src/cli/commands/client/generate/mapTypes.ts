@@ -10,7 +10,7 @@ export function mapTypes(source: string, mapper: (type: string) => string) {
 	const types = fetchTypes(source)
 
 	const result = types.reduce((source, type) => {
-		const typePattern = new RegExp(String.raw`\b${type}\b`, "g")
+		const typePattern = new RegExp(String.raw`(?<!^\s+)\b${type}\b`, "g")
 
 		const mappedType = mapper(type)
 
