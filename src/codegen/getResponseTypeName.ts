@@ -1,5 +1,5 @@
 export function getResponseTypeName(type: string) {
-	if (type.startsWith("Data_")) {
+	if (type === "Data") {
 		return type
 	}
 

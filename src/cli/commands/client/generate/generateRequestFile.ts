@@ -19,18 +19,18 @@ export function generateRequestFile(operation: OperationData) {
 	const getMethodTypeName = getMethodTypeNameMapper(method)
 
 	// prettier-ignore
-	const operationTypeMapper = pipe
-		.from<string>()
-		.then(getMethodTypeName)
+	const operationTypeMapper = pipe.from<string>()
 
 	// prettier-ignore
 	const requestTypeMapper = operationTypeMapper
 		.then(getRequestTypeName)
+		.then(getMethodTypeName)
 		.done()
 
 	// prettier-ignore
 	const responseTypeMapper = operationTypeMapper
 		.then(getResponseTypeName)
+		.then(getMethodTypeName)
 		.done()
 
 	const variableType = getMethodTypeName("Variables")

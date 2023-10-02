@@ -1,5 +1,5 @@
 export function getRequestTypeName(type: string) {
-	if (type.startsWith("Variables_")) {
+	if (type === "Variables") {
 		return type
 	}
 
