@@ -1,5 +1,4 @@
 import { TypeScriptTargetLanguage } from "quicktype-core"
-import { EnumOption } from "quicktype-core/dist/RendererOptions"
 import { quicktypeJsonSamples } from "@/codegen/quicktypeJsonSamples"
 import { replaceAnyWithUnknown } from "@/codegen/typescript/replaceAnyWithUnknown"
 import { pipe } from "@/utils/pipe"
