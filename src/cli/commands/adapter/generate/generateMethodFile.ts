@@ -1,5 +1,5 @@
 import { source } from "common-tags"
-import { getMethodTypeNameMapper } from "@/codegen/getMethodTypeNameMapper"
+import { getMethodTypeNameMapper } from "@/codegen/golang/getMethodTypeNameMapper"
 
 export function generateMethodFile(method: string) {
 	const getMethodTypeName = getMethodTypeNameMapper(method)

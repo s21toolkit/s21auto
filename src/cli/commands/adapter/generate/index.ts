@@ -5,7 +5,7 @@ import { outDir } from "@/cli/arguments/outDir"
 import { HarFile } from "@/cli/arguments/types/HarFile"
 import { fetchHarMethods } from "@/cli/commands/adapter/generate/fetchHarMethods"
 import { generateMethodFile } from "@/cli/commands/adapter/generate/generateMethodFile"
-import { getMethodFileName } from "@/codegen/getMethodFileName"
+import { getMethodFileName } from "@/codegen/golang/getMethodFileName"
 
 export const generateCommand = command({
 	name: "generate",

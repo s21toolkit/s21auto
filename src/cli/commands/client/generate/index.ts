@@ -5,7 +5,7 @@ import { harFiles } from "@/cli/arguments/harFiles"
 import { outDir } from "@/cli/arguments/outDir"
 import { generateRequestFile } from "@/cli/commands/client/generate/generateRequestFile"
 import { getDataSamples } from "@/codegen/getDataSamples"
-import { getMethodFileName } from "@/codegen/getMethodFileName"
+import { getMethodFileName } from "@/codegen/golang/getMethodFileName"
 import { getApiOperations } from "@/har/getApiOperations"
 import { merge } from "@/har/merge"
 
