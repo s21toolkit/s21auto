@@ -3,6 +3,8 @@ import { GqlRequest } from "@/gql/GqlRequest"
 import { filter, isGqlRequest, isHttpOk } from "@/har/filter"
 import { pipe } from "@/utils/pipe"
 
+export type OperationMap = ReturnType<typeof getApiOperations>
+
 export function getApiOperations(har: Har) {
 	const filteredHar = pipe
 		.of(har)
