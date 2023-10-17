@@ -14,7 +14,7 @@ export function generateOperationNamespace(operation: OperationData) {
 	const result = source`
 		export namespace ${namespaceName} {
 			export const request = createGqlQueryRequest(
-				"${query.replaceAll(/\s+/g, " ")}"
+				"${query.replaceAll("\n", "\\n")}"
 			)
 
 			export namespace Variables {
