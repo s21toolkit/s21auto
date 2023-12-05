@@ -1,4 +1,5 @@
 import { source } from "common-tags"
+import { GOLANG_CODEGEN_WARNING } from "@/codegen/golang/codegenWarning"
 import { getMethodTypeNameMapper } from "@/codegen/golang/getMethodTypeNameMapper"
 
 export function generateMethodFile(method: string) {
@@ -8,6 +9,7 @@ export function generateMethodFile(method: string) {
 	const dataType = getMethodTypeName("Data")
 
 	const result = source`
+		${GOLANG_CODEGEN_WARNING}
 		package controller
 
 		import (

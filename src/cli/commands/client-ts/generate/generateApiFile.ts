@@ -1,7 +1,9 @@
 import { source } from "common-tags"
+import { TYPESCRIPT_CODEGEN_WARNING } from "@/codegen/typescript/codegenWarning"
 
 export function generateApiFile(apiNamespace: string, apiContext: string) {
 	const result = source`
+		${TYPESCRIPT_CODEGEN_WARNING}
 		import { Client } from "@/Client"
 		import { createGqlQueryRequest } from "@/gql"
 

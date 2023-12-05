@@ -1,9 +1,10 @@
 import { source } from "common-tags"
 import { generateTypes } from "@/cli/commands/client/generate/generateTypes"
 import { mapTypes } from "@/cli/commands/client/generate/mapTypes"
+import { GOLANG_CODEGEN_WARNING } from "@/codegen/golang/codegenWarning"
+import { getMethodName } from "@/codegen/golang/getMethodName"
 import { getMethodTypeNameMapper } from "@/codegen/golang/getMethodTypeNameMapper"
 import { getRequestTypeName } from "@/codegen/golang/getRequestTypeName"
-import { getMethodName } from "@/codegen/golang/getMethodName"
 import { getResponseTypeName } from "@/codegen/golang/getResponseTypeName"
 import { OperationData } from "@/gql/OperationData"
 import { pipe } from "@/utils/pipe"
@@ -37,6 +38,7 @@ export function generateRequestFile(operation: OperationData) {
 	const dataType = getMethodTypeName("Data")
 
 	const result = source`
+		${GOLANG_CODEGEN_WARNING}
 		package requests
 
 		import "github.com/s21toolkit/s21client/gql"
