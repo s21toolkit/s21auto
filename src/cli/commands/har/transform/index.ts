@@ -93,7 +93,7 @@ export const transformCommand = command({
 			type: array(string),
 		}),
 		takeUnique: flag({
-			short: "q",
+			short: "Q",
 			long: "take-unique",
 			description:
 				"When merging, takes only unique (new) GQL operations from each har file in order",
