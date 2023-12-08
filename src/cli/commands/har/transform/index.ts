@@ -61,7 +61,7 @@ export function mergeUnique(target: Har, ...sources: Har[]) {
 
 export const transformCommand = command({
 	name: "transform",
-	aliases: ["merge"],
+	aliases: ["merge", "%"],
 	description: "Transform HAR file(s)",
 	args: {
 		filterGql: flag({
