@@ -17,7 +17,7 @@ module.exports = configure({
 			"no-relative-import-paths/no-relative-import-paths": [
 				"error",
 				{
-					allowSameFolder: false,
+					allowSameFolder: true,
 					rootDir: "src",
 					prefix: "@",
 				},
