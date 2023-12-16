@@ -3,11 +3,19 @@ import { extname } from "path"
 import { command, option, positional } from "cmd-ts"
 import { File } from "cmd-ts/batteries/fs"
 import { Har } from "har-format"
+import { deprecate } from "util"
 import { NewFile } from "@/cli/arguments/types/NewFile"
-import { createGraphLogFromHar, GraphLog, GraphLogBuilder } from "@/graphlog"
+import {
+	createGraphLogFromHar,
+	filter,
+	GraphLog,
+	GraphLogBuilder,
+	merge,
+	take,
+} from "@/graphlog"
 
-namespace GraphLogUtils {
-	export function loadLog(path: string) {
+const GraphLogUtils = {
+	loadLog(path: string) {
 		const rawData = readFileSync(path, { encoding: "utf-8" })
 
 		const data = JSON.parse(rawData)
@@ -17,7 +25,12 @@ namespace GraphLogUtils {
 		}
 
 		return data as GraphLog
-	}
+	},
+
+	merge,
+	deprecate,
+	filter,
+	take,
 }
 
 type Script = (log: GraphLogBuilder, utils: typeof GraphLogUtils) => void
