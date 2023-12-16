@@ -1,8 +1,9 @@
-import { readFileSync } from "fs"
+import { readFileSync, writeFileSync } from "fs"
 import { extname } from "path"
-import { command, positional } from "cmd-ts"
+import { command, option, positional } from "cmd-ts"
 import { File } from "cmd-ts/batteries/fs"
 import { Har } from "har-format"
+import { NewFile } from "@/cli/arguments/types/NewFile"
 import { createGraphLogFromHar, GraphLog, GraphLogBuilder } from "@/graphlog"
 
 namespace GraphLogUtils {
@@ -31,10 +32,22 @@ export const runScriptCommand = command({
 			description: "JS/TS file",
 			type: File,
 		}),
+		outFile: option({
+			short: "o",
+			long: "out-file",
+			description: "Output GraphLog file",
+			type: NewFile,
+		}),
 	},
 	async handler(argv) {
 		const script: Script = (await import(argv.script)).default
 
-		await script(new GraphLogBuilder(), GraphLogUtils)
+		const logBuilder = new GraphLogBuilder()
+
+		await script(logBuilder, GraphLogUtils)
+
+		writeFileSync(argv.outFile, JSON.stringify(logBuilder.graphLog), {
+			encoding: "utf-8",
+		})
 	},
 })
