@@ -4,6 +4,7 @@ import { clientCommand } from "@/cli/commands/client"
 import { clientTsCommand } from "@/cli/commands/client-ts"
 import { docsCommand } from "@/cli/commands/docs"
 import { harCommand } from "@/cli/commands/har"
+import { graphlogCommand } from "./commands/graphlog"
 
 export const cli = subcommands({
 	name: "s21auto",
@@ -14,5 +15,6 @@ export const cli = subcommands({
 		"client-ts": clientTsCommand,
 		adapter: adapterCommand,
 		docs: docsCommand,
+		graphlog: graphlogCommand,
 	},
 })
