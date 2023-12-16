@@ -1,4 +1,5 @@
 import { source } from "common-tags"
+import { flow } from "effect/Function"
 import { generateTypes } from "@/cli/commands/client/generate/generateTypes"
 import { mapTypes } from "@/cli/commands/client/generate/mapTypes"
 import { GOLANG_CODEGEN_WARNING } from "@/codegen/golang/codegenWarning"
@@ -7,7 +8,6 @@ import { getMethodTypeNameMapper } from "@/codegen/golang/getMethodTypeNameMappe
 import { getRequestTypeName } from "@/codegen/golang/getRequestTypeName"
 import { getResponseTypeName } from "@/codegen/golang/getResponseTypeName"
 import { OperationData } from "@/gql/OperationData"
-import { pipe } from "@/utils/pipe"
 
 export function generateRequestFile(operation: OperationData) {
 	const { name, query, variableSamples, dataSamples } = operation
@@ -19,20 +19,9 @@ export function generateRequestFile(operation: OperationData) {
 
 	const getMethodTypeName = getMethodTypeNameMapper(method)
 
-	// prettier-ignore
-	const operationTypeMapper = pipe.from<string>()
+	const requestTypeMapper = flow(getRequestTypeName, getMethodTypeName)
 
-	// prettier-ignore
-	const requestTypeMapper = operationTypeMapper
-		.then(getRequestTypeName)
-		.then(getMethodTypeName)
-		.done()
-
-	// prettier-ignore
-	const responseTypeMapper = operationTypeMapper
-		.then(getResponseTypeName)
-		.then(getMethodTypeName)
-		.done()
+	const responseTypeMapper = flow(getResponseTypeName, getMethodTypeName)
 
 	const variableType = getMethodTypeName("Variables")
 	const dataType = getMethodTypeName("Data")

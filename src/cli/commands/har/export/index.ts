@@ -1,5 +1,6 @@
 import { writeFile } from "fs/promises"
 import { command, option, string } from "cmd-ts"
+import { pipe } from "effect"
 import { Har } from "har-format"
 import { harFiles } from "@/cli/arguments/harFiles"
 import { NewFile } from "@/cli/arguments/types/NewFile"
@@ -12,7 +13,6 @@ import {
 import { GqlRequest } from "@/gql/GqlRequest"
 import { filter, isGqlRequest, isHttpOk } from "@/har/filter"
 import { merge } from "@/har/merge"
-import { pipe } from "@/utils/pipe"
 
 export const exportCommand = command({
 	name: "export",
@@ -35,11 +35,11 @@ export const exportCommand = command({
 		...harFiles,
 	},
 	async handler(argv) {
-		const har = pipe
-			.of(merge(argv.harFirst, ...argv.harRest))
-			.then((har) => filter(har, isGqlRequest))
-			.then((har) => filter(har, isHttpOk))
-			.call()
+		const har = pipe(
+			merge(argv.harFirst, ...argv.harRest),
+			(har) => filter(har, isGqlRequest),
+			(har) => filter(har, isHttpOk),
+		)
 
 		const workspace = createWorkspace({
 			name: argv.workspace,
