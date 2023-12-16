@@ -7,6 +7,7 @@ export type GraphLog = {
 
 export type GraphLogEntry = {
 	operation: string
+	variables: string
 	query: string
 	response: string
 }
