@@ -1,7 +1,12 @@
+import { $RefParser } from "@apidevtools/json-schema-ref-parser"
 import { command, option } from "cmd-ts"
+import { source } from "common-tags"
+import { JSONSchemaTargetLanguage } from "quicktype-core"
+import { getGraphQLWriter, getJsonSchemaReader, makeConverter } from "typeconv"
 import { harFiles } from "@/cli/arguments/harFiles"
 import { NewFile } from "@/cli/arguments/types/NewFile"
-import { generateSchema } from "@/cli/commands/docs/generate/generateSchema"
+import { quicktypeJsonSamples } from "@/codegen/quicktypeJsonSamples"
+import { GqlRequest } from "@/gql/GqlRequest"
 import { getApiOperations } from "@/har/getApiOperations"
 import { merge } from "@/har/merge"
 
@@ -25,7 +30,7 @@ function getTypeSamples(typeSamples: Map<string, object[]>, data: unknown) {
 	}
 }
 
-function eliminateReferences(typeName: string, data: unknown) {
+function eliminateTypeReferences(typeName: string, data: unknown) {
 	if (typeof data != "object" || data == null) {
 		return
 	}
@@ -36,13 +41,73 @@ function eliminateReferences(typeName: string, data: unknown) {
 		}
 
 		if ("__typename" in value && value.__typename !== typeName) {
-			data[key as never] = {
-				__ref: true,
-				[`${value.__typename}`]: null,
-			} as never
+			data[key as never] = { $typeref: null, [value.__typename]: null } as never
 		} else {
-			eliminateReferences(typeName, data[key as never])
+			eliminateTypeReferences(typeName, data[key as never])
 		}
+	}
+}
+
+function dereference(schema: any) {
+	const { definitions } = schema
+
+	function dereferenceObject(object: any, resolved: string[] = []) {
+		if (typeof object != "object" || object == null) {
+			return
+		}
+		const _resolved = structuredClone(resolved)
+
+		if ("$ref" in object) {
+			const definitionName = (object.$ref as string).replace(
+				"#/definitions/",
+				"",
+			)
+
+			if (resolved.includes(definitionName)) {
+				return
+			}
+
+			const definition =
+				definitionName === "#"
+					? Object.values(definitions)[0]
+					: definitions[definitionName]
+
+			Object.assign(object, definition)
+
+			delete object.$ref
+
+			_resolved.push(definitionName)
+		}
+
+		for (const value of Object.values(object)) {
+			dereferenceObject(value, _resolved)
+		}
+	}
+
+	dereferenceObject(schema)
+
+	delete schema.definitions
+}
+
+function resolveTyperefs(schema: any) {
+	if (typeof schema != "object" || schema == null) {
+		return
+	}
+
+	if (schema.properties?.$typeref) {
+		const definitionName = Object.keys(schema.properties).find(
+			(k) => k !== "$typeref",
+		)!
+
+		for (const key in schema) {
+			delete schema[key]
+		}
+
+		schema.$ref = `#/definitions/${definitionName}`
+	}
+
+	for (const value of Object.values(schema)) {
+		resolveTyperefs(value)
 	}
 }
 
@@ -89,19 +154,65 @@ export const inferCommand = command({
 
 		for (const [typeName, samples] of typeSamples.entries()) {
 			for (const sample of samples) {
-				eliminateReferences(typeName, sample)
+				eliminateTypeReferences(typeName, sample)
 			}
 
-			const schema = generateSchema(
+			const schemaText = quicktypeJsonSamples(
+				new JSONSchemaTargetLanguage(),
+				{
+					rendererOptions: {
+						"just-types": true,
+					},
+					inferEnums: false,
+				},
 				samples.map((data) => JSON.stringify(data)),
 				typeName,
 			)
 
-			typeSchemas.set(typeName, JSON.parse(schema))
+			const schema = JSON.parse(schemaText)
+
+			dereference(schema)
+			resolveTyperefs(schema)
+
+			typeSchemas.set(typeName, schema)
 		}
 
-		console.log(JSON.stringify(Array.from(typeSchemas.entries()), null, 2))
+		const mainSchema: any = {
+			$schema: "http://json-schema.org/draft-06/schema#",
+			definitions: {},
+		}
 
-		// console.error(Array.from(typeSampleMap.keys()))
+		for (const [typeName, schema] of typeSchemas) {
+			mainSchema.definitions[typeName] = schema
+		}
+
+		const reader = getJsonSchemaReader()
+		const writer = getGraphQLWriter()
+
+		const converter = makeConverter(reader, writer)
+
+		const converted = await converter.convert({
+			data: JSON.stringify(mainSchema),
+		})
+
+		let graphqlSchema = converted.data
+
+		for (const [, [entry]] of operations) {
+			const requestData = JSON.parse(
+				entry.request.postData!.text!,
+			) as GqlRequest
+
+			graphqlSchema = source`
+				${graphqlSchema}
+
+				${requestData.query}
+			`
+		}
+
+		// console.log(JSON.stringify(mainSchema, null, 2))
+
+		// console.error(Array.from(typeSamples.keys()))
+
+		console.log(graphqlSchema)
 	},
 })
