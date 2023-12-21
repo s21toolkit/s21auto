@@ -3,6 +3,7 @@ import { adapterCommand } from "@/cli/commands/adapter"
 import { clientCommand } from "@/cli/commands/client"
 import { clientTsCommand } from "@/cli/commands/client-ts"
 import { docsCommand } from "@/cli/commands/docs"
+import { gqlCommand } from "@/cli/commands/gql"
 import { harCommand } from "@/cli/commands/har"
 
 export const cli = subcommands({
@@ -14,5 +15,6 @@ export const cli = subcommands({
 		"client-ts": clientTsCommand,
 		adapter: adapterCommand,
 		docs: docsCommand,
+		gql: gqlCommand,
 	},
 })
