@@ -1,13 +1,13 @@
 import { source } from "common-tags"
-import { generateSchemas } from "@/cli/commands/client-ts/generate/generateTypes"
+import { generateTypes } from "@/cli/commands/client-ts/generate/generateTypes"
 import { getNamespaceName } from "@/codegen/typescript/getNamespaceName"
 import { OperationData } from "@/gql/OperationData"
 
 export function generateOperationNamespace(operation: OperationData) {
 	const { name, query, variableSamples, dataSamples } = operation
 
-	const variableSchemas = generateSchemas(variableSamples, "Variables")
-	const dataSchemas = generateSchemas(dataSamples, "Data")
+	const variableTypes = generateTypes(variableSamples, "Variables")
+	const dataTypes = generateTypes(dataSamples, "Data")
 
 	const namespaceName = getNamespaceName(name)
 
@@ -18,17 +18,13 @@ export function generateOperationNamespace(operation: OperationData) {
 			)
 
 			export namespace Variables {
-				${variableSchemas}
-
-				export const schema = VariablesSchema
+				${variableTypes}
 			}
 
 			export type Variables = Variables.Variables
 
 			export namespace Data {
-				${dataSchemas}
-
-				export const schema = DataSchema
+				${dataTypes}
 			}
 
 			export type Data = Data.Data
