@@ -4,6 +4,7 @@ import { TYPESCRIPT_CODEGEN_WARNING } from "@/codegen/typescript/codegenWarning"
 export function generateApiFile(apiNamespace: string, apiContext: string) {
 	const result = source`
 		${TYPESCRIPT_CODEGEN_WARNING}
+		import { z } from "zod"
 		import { Client } from "@/Client"
 		import { createGqlQueryRequest } from "@/gql"
 
