@@ -8,6 +8,7 @@
     "lint:fix": "eslint src --fix"
   },
   "dependencies": {
+    "@s21toolkit/client": "^0.8.0",
     "acorn": "^8.11.3",
     "acorn-walk": "^8.3.2",
     "cmd-ts": "^0.13.0",
